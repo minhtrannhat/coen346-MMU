@@ -1,0 +1,44 @@
+Clock: 1000, Process 2: Start
+
+Clock: 1060, Process 2: Store: Variable 1, Value: 5
+
+Clock: 1130, Process 2: Store: Variable 2, Value: 3
+
+Clock: 1170, Process 2: Store: Variable 3, Value: 7
+
+Clock: 1190 Memory Manager Swap: Variable 3 with Variable 1
+
+Clock: 1200, Process 2: Lookup: Variable 3, Value: 7
+
+Clock: 1220, Process 2: Lookup: Variable 2, Value: 3
+
+Clock: 1240, Process 2: Release: Variable: 1
+
+Clock: 1250, Process 2: Store: Variable 1, Value: 8
+
+Clock: 1290 Memory Manager Swap: Variable 1 with Variable 3
+
+Clock: 1290, Process 2: Lookup: Variable 1, Value: 8
+
+Clock: 1320, Process 2: Store: Variable 1, Value: 5
+
+Clock: 1340, Process 2: Store: Variable 2, Value: 3
+
+Clock: 1370, Process 2: Store: Variable 3, Value: 7
+
+Clock: 2010, Process 1: Start
+
+Clock: 2060, Process 1: Lookup: Variable 2, Value: 3
+
+Clock: 2070, Process 1: Release: Variable: 1
+
+Clock: 2110, Process 1: Store: Variable 1, Value: 8
+
+Clock: 2170, Process 1: Lookup: Variable 1, Value: 8
+
+Clock: 2250, Process 1: Store: Variable 1, Value: 5
+
+Clock: 2280, Process 1: Store: Variable 2, Value: 3
+
+Clock: 2310, Process 1: Store: Variable 3, Value: 7
+

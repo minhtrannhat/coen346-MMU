@@ -26,7 +26,9 @@ class Page:
     # it takes input line which is the input that comes from the read of the write. Since we know at what index it was found, we look at the list at that index and we modify it
 
     def change(self, input_line, array_page, index):
-        input_line[index] = str(array_page[0]) + " " + str(array_page[1] + "\n")
+        input_line[index] = (
+            str(array_page[0]) + " " + str(array_page[1] + "\n")
+        )
         with open("vm.txt", mode="w") as rep:
             rep.writelines(input_line)
 

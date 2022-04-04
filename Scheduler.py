@@ -1,9 +1,9 @@
 from process import Process
-import time
-import threading
+from threading import Thread
+import logging
 
 
-class Scheduler(threading.Thread):
+class Scheduler(Thread):
     def __init__(
         self,
         number_of_core,
@@ -38,10 +38,11 @@ class Scheduler(threading.Thread):
         self.is_finished = bool1
 
     def run(self):
-        print(f"Start  Scheduler Thread\n")
+        logger = logging.getLogger(f"{__name__} thread")
+        logger.debug("Start  Scheduler Thread\n")
         while not self.is_finished:
             pass
-        print(f"Finished  Scheduler Thread\n")
+        logger.debug("Finished  Scheduler Thread\n")
 
     def process_thread(self):
         self.thread_clock.start()
@@ -54,7 +55,7 @@ class Scheduler(threading.Thread):
 
                 if (
                     self.number_of_core > len(self.active_processes)
-                    and self.thread_clock.timer >= time_needed_to_start
+                    and self.thread_clock.time >= time_needed_to_start
                 ):
 
                     new_process = Process(
@@ -64,7 +65,7 @@ class Scheduler(threading.Thread):
                         self.command_obj,
                         self.output_file,
                         self.current_process[2],
-                        self.thread_clock.timer,
+                        self.thread_clock.time,
                         self.current_process[0],
                     )
                     new_process.start()
