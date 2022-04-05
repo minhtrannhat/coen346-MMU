@@ -1,6 +1,6 @@
 import random  # we need to import random since the assignment said the time was random
 from threading import Thread, Lock  # for threading
-from time import sleep  # for time purposes
+from time import sleep  # for time purposes import logging
 import logging
 
 
@@ -45,14 +45,14 @@ class Process(Thread):
         logger = logging.getLogger(f"{__name__} thread")
 
         logger.info(
-            f"Clock: {self.starting_time}, Process {self.process_number}: Start\n"
+            f"Clock: {self.starting_time}, Process {self.process_number}: Start"
         )
 
         while self.end_time > self.thread_clock.time:
             self.execute()
 
         logger.info(
-            f"Clock: {self.end_time}, Process {self.process_number}: Finished\n"
+            f"Clock: {self.end_time}, Process {self.process_number}: Finished"
         )
 
         for proces in self.active_processes:

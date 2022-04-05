@@ -29,10 +29,10 @@ class MemoryManager(Thread):
 
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
-        logger.debug("Starting Memory Manager Thread\n")
+        logger.debug("Starting Memory Manager Thread")
         while not self.isFinished:
             pass
-        logger.debug("Exiting Memory Manager Thread\n")
+        logger.debug("Exiting Memory Manager Thread")
 
     def store_function(self, Id, Value):
         if not self.object_memory.full():
@@ -52,7 +52,9 @@ class MemoryManager(Thread):
         logger = logging.getLogger(f"{__name__} thread")
         # For this swap to work, we should basically perform the principle of a bubble sort with the temp values
         temporary_index_value = int(self.object_memory.Index_LRU())
+        logger.debug(f"temporary_index_value is {temporary_index_value}")
         temporary_memory = self.object_memory.memory[temporary_index_value]
+        logger.debug(f"temp_memory currently is {temporary_memory}")
         temporary_disk = self.page_disk.read(Id)
         # We will make use of the functions set and write that were defined in the virtual memory and in the disk classes . Those were written for that purpose precisely
 
@@ -60,7 +62,7 @@ class MemoryManager(Thread):
         self.page_disk.Write(temporary_memory)
 
         logger.info(
-            f"Clock: {self.thread_clock.time} Memory Manager Swap: Variable {Id} with Variable {temporary_memory[temporary_index_value]}\n"
+            f"Clock: {self.thread_clock.time},  Memory Manager Swap: Variable {Id} with Variable {temporary_memory[temporary_index_value]}"
         )
         return temporary_disk[1]
 
@@ -79,14 +81,14 @@ class MemoryManager(Thread):
             if com == "Release":
                 self.release_function(com1)
                 logger.info(
-                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable: {Id}\n"
+                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable: {Id}"
                 )
 
             elif com == "Store":
                 self.status = True
                 self.store_function(com1, com2)
                 logger.info(
-                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable {Id}, Value: {com2}\n"
+                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable {Id}, Value: {com2}"
                 )
                 self.status = False
 
@@ -94,5 +96,5 @@ class MemoryManager(Thread):
                 self.thread_clock.add_time(10)
                 self.look_up_function(com1)
                 logger.info(
-                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable {Id}, Value: {self.object_memory.get_variable(Id)}\n"
+                    f"Clock: {self.thread_clock.time}, Process {process_number}: {com}: Variable {Id}, Value: {self.object_memory.get_variable(Id)}"
                 )

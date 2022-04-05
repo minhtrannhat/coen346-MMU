@@ -39,10 +39,10 @@ class Scheduler(Thread):
 
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
-        logger.debug("Start  Scheduler Thread\n")
+        logger.debug("Start  Scheduler Thread")
         while not self.is_finished:
             pass
-        logger.debug("Finished  Scheduler Thread\n")
+        logger.debug("Finished  Scheduler Thread")
 
     def process_thread(self):
         self.thread_clock.start()
