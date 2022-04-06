@@ -1,69 +1,72 @@
 from Commands import Commands
 from Page import Page
-from Main_Memory import Main_Memory
-from Clock import clock
+import logging
+from VirtualMemory import VirtualMemory
+
+logger = logging.getLogger(f"{__name__} thread")
 
 
 def extract_data():
 
-    # PROCESS TEXT FILE
-    with open("processes.txt", mode="r") as pro:
-        input_lines = pro.readlines()
-        # print(input_lines)
-        # First line represent the number of cores
-        number_of_core = int(input_lines[0])
-        # Second line represent the number of N processes
-        number_of_processes = int(input_lines[1])
-    # Rest of the file we need a list of process start time and duration, each element of the list represent a process with its number, its ready time and its service time
+    # Process processes
+    with open("processes.txt", mode="r") as process:
+        lines = process.readlines()
+        numberOfCores = int(lines[0])
+        numberOfProcesses = int(lines[1])
 
-    process = []
-    process_number = 1
-    for p in input_lines[2:]:
+    listOfProcesses = []
+    processNumber = 1
 
-        process.append(
+    for process in lines[2:]:
+        listOfProcesses.append(
             [
-                process_number,
-                int(p.split(" ")[0]),
-                int(p.split(" ")[1].rstrip()),
+                processNumber,
+                int(process.split(" ")[0]),
+                int(process.split(" ")[1].rstrip()),
             ]
         )
-        process_number += 1
+        processNumber += 1
 
-    process = sorted(process, key=lambda item: item[1])
+    # sort all processes
+    logger.debug(f"List of all processes before sorting: {listOfProcesses}")
+    listOfProcesses = sorted(listOfProcesses, key=lambda item: item[1])
+    logger.debug(f"List of all processes after sorting: {listOfProcesses}")
 
-    print(process)
+    # process memonfig.txt
+    with open("memconfig.txt", mode="r") as file:
+        lines = file.readlines()
+        numberOfPages = int(lines[0])
+        K_VALUE = int(lines[1])
+        timeOut = int(lines[2])
 
-    # MEMCONFIG.TXT
-    with open("memconfig.txt", mode="r") as mem:
-        input_lines2 = mem.readlines()
-        # number of pages in main memory
-        number_of_pages = int(input_lines2[0])
+        logger.debug(f"Number of pages is: {numberOfPages}")
+        logger.debug(f"The K value is: {K_VALUE}")
+        logger.debug(f"The time out value is {timeOut}")
 
     # COMMANDS.TXT
-    with open("commands.txt", "r") as com:
-        commands = com.readlines()
-        list_of_commands = []
-        for command in commands:
-            line_split = command.split()
+    with open("commands.txt", "r") as file:
+        lines = file.readlines()
+        listOfCommands = []
+        for line in lines:
+            line_split = line.split()
             if len(line_split) == 2:
-                list_of_commands.append([line_split[0], line_split[1]])
+                listOfCommands.append([line_split[0], line_split[1]])
             elif len(line_split) == 3:
-                list_of_commands.append(
+                listOfCommands.append(
                     [line_split[0], line_split[1], line_split[2]]
                 )
-        print(list_of_commands)
+        logger.debug(f"List of commands: {listOfCommands}")
 
     return (
-        process,
-        number_of_pages,
-        number_of_core,
-        list_of_commands,
+        listOfProcesses,
+        numberOfPages,
+        numberOfCores,
+        listOfCommands,
     )
 
 
-def object_creations(list_of_commands, number_of_pages):
-    command_object = Commands(list_of_commands)
-    disk_object = Page()
-    thread_clock = clock()
-    memory_object = Main_Memory(number_of_pages)
-    return command_object, disk_object, thread_clock, memory_object
+def object_creations(listOfCommands, numberOfPages):
+    commandObject = Commands(listOfCommands)
+    diskObject = Page()
+    memoryObject = VirtualMemory(numberOfPages)
+    return commandObject, diskObject, memoryObject

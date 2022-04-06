@@ -1,5 +1,6 @@
 from process import Process
 from threading import Thread
+from Clock import myClock
 import logging
 
 
@@ -8,22 +9,19 @@ class Scheduler(Thread):
         self,
         number_of_core,
         manager_obj,
-        file_output,
         command_obj,
         list_of_processes,
         list_of_threads,
-        clock_obj,
     ):
         super(Scheduler, self).__init__()
 
         # intialise characteristic
         self.number_of_core = number_of_core
         self.active_processes = []
-        self.is_finished = False
+        self.isFinished = False
 
         # intialise objects
         self.thread_manager = manager_obj
-        self.thread_clock = clock_obj
         self.command_obj = command_obj
 
         # initialise lists
@@ -31,21 +29,17 @@ class Scheduler(Thread):
         self.list_processes = list_of_processes
         self.current_process = []
 
-        # output
-        self.output_file = file_output
-
-    def set_finished(self, bool1):
-        self.is_finished = bool1
+    def setFinished(self, isFinished):
+        self.isFinished = isFinished
 
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
         logger.debug("Start  Scheduler Thread")
-        while not self.is_finished:
+        while not self.isFinished:
             pass
         logger.debug("Finished  Scheduler Thread")
 
     def process_thread(self):
-        self.thread_clock.start()
         while True:
             if (
                 self.list_processes
@@ -55,17 +49,15 @@ class Scheduler(Thread):
 
                 if (
                     self.number_of_core > len(self.active_processes)
-                    and self.thread_clock.time >= time_needed_to_start
+                    and myClock.time >= time_needed_to_start
                 ):
 
                     new_process = Process(
                         self.thread_manager,
-                        self.thread_clock,
                         self.active_processes,
                         self.command_obj,
-                        self.output_file,
                         self.current_process[2],
-                        self.thread_clock.time,
+                        myClock.time,
                         self.current_process[0],
                     )
                     new_process.start()

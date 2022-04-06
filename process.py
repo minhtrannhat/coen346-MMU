@@ -1,6 +1,7 @@
 import random  # we need to import random since the assignment said the time was random
 from threading import Thread, Lock  # for threading
 from time import sleep  # for time purposes import logging
+from Clock import myClock
 import logging
 
 
@@ -9,10 +10,8 @@ class Process(Thread):
     def __init__(
         self,
         manager_obj,
-        clock_obj,
         current_processes,
         command_obj,
-        output_file,
         service_times,
         S_Time,
         process_numbers,
@@ -22,7 +21,6 @@ class Process(Thread):
         self.process_status = False
         self.process_number = process_numbers
         # initialising classes object
-        self.thread_clock = clock_obj
         self.thread_manager = manager_obj
         self.theard_command = command_obj
 
@@ -35,9 +33,6 @@ class Process(Thread):
         self.lock = Lock()
         self.active_processes = current_processes
 
-        # output file
-        self.output1 = output_file
-
     def set_finished(self, bool1):
         self.process_status = bool1
 
@@ -48,7 +43,7 @@ class Process(Thread):
             f"Clock: {self.starting_time}, Process {self.process_number}: Start"
         )
 
-        while self.end_time > self.thread_clock.time:
+        while self.end_time > myClock.time:
             self.execute()
 
         logger.info(
@@ -67,7 +62,7 @@ class Process(Thread):
         with self.lock:
             wait_time = (
                 min(
-                    self.end_time - self.thread_clock.time,
+                    self.end_time - myClock.time,
                     random.randrange(0, 1000),
                 )
                 / 1000
@@ -76,7 +71,7 @@ class Process(Thread):
 
                 sleep(wait_time)
 
-                if self.end_time - self.thread_clock.time > 300:
+                if self.end_time - myClock.time > 300:
                     command = self.theard_command.list[
                         self.theard_command.index
                     ]

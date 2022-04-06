@@ -13,22 +13,20 @@ class Page:
     # we needed a function that was able to write to the page object
     # This Write function , will take as an argument the page we want to write into the vm as a form of an array [Id,Value]
     # To write, we input the txt file, we loop through each line and we add to the page if the variable dosnt already exist
-    def Write(self, array_page):
+    def Write(self, pageArray):
         with open("vm.txt", mode="r") as f:
             input_line = f.readlines()
             for i, lines in enumerate(input_line):
-                if lines[0] == array_page[0]:
-                    self.change(input_line, array_page, i)
+                if lines[0] == pageArray[0]:
+                    self.change(input_line, pageArray, i)
                     return
-            self.add(array_page)
+            self.add(pageArray)
 
     # this function is called by the write function when the id is already found in the vm at a certain index
     # it takes input line which is the input that comes from the read of the write. Since we know at what index it was found, we look at the list at that index and we modify it
 
-    def change(self, input_line, array_page, index):
-        input_line[index] = (
-            str(array_page[0]) + " " + str(array_page[1] + "\n")
-        )
+    def change(self, input_line, pageArray, index):
+        input_line[index] = str(pageArray[0]) + " " + str(pageArray[1] + "\n")
         with open("vm.txt", mode="w") as rep:
             rep.writelines(input_line)
 
@@ -43,7 +41,6 @@ class Page:
         return -1
 
     # this add function is used to add a new line to the vm, we dont need to loop as we already looped in the write function.
-
-    def add(self, array_page):
+    def add(self, pageArray):
         with open("vm.txt", mode="a") as vm1:
-            vm1.write(str(array_page[0]) + " " + str(array_page[1]) + "\n")
+            vm1.write(str(pageArray[0]) + " " + str(pageArray[1]) + "\n")

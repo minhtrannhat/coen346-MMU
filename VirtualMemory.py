@@ -1,12 +1,12 @@
 from collections import defaultdict
 
 
-class Main_Memory:
+class VirtualMemory:
     def __init__(self, number_of_pages):
-        self.memory = []
-        self.number_of_pages = number_of_pages
-        self.access_memory_value = defaultdict(lambda: 0)
-        self.increment = 0
+        self.memory: list = []
+        self.number_of_pages: int = number_of_pages
+        self.access_memory_value: dict = defaultdict(lambda: 0)
+        self.increment: int = 0
 
     def full(self):
         return len(self.memory) == self.number_of_pages

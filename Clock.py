@@ -20,6 +20,9 @@ class clock(Thread):
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
         while not self.isFinished:
-            sleep(0.1)
+            sleep(0.2)
             self.time = self.time + 50
             logger.debug(f"Current time is {self.time}")
+
+
+myClock = clock()

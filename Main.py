@@ -1,6 +1,7 @@
 from Scheduler import Scheduler
 from MemoryManager import MemoryManager
 from Parser import extract_data, object_creations
+from Clock import myClock
 import logging
 
 
@@ -17,50 +18,50 @@ def main():
 
     logger = logging.getLogger(__name__)
 
-    list_of_threads = []
+    listOfThreads = []
+
     (
-        processes,
-        number_of_pages,
-        number_of_cores,
-        list_of_command,
+        listOfProcesses,
+        numberOfPages,
+        numberOfCores,
+        listOfCommands,
     ) = extract_data()
 
     (
-        command_object,
-        disk_object,
-        thread_clock,
-        memory_object,
-    ) = object_creations(list_of_command, number_of_pages)
+        commands,
+        diskObject,
+        memoryObject,
+    ) = object_creations(listOfCommands, numberOfPages)
 
-    output = "output.txt"
+    # start the clock
+    myClock.start()
 
-    memoryManager = MemoryManager(
-        thread_clock, command_object, output, disk_object, memory_object
-    )
+    # start the MMU
+    memoryManager = MemoryManager(commands, diskObject, memoryObject)
     memoryManager.start()
 
-    thread_scheduler = Scheduler(
-        number_of_cores,
+    # initialise and start the Scheduler
+    scheduler = Scheduler(
+        numberOfCores,
         memoryManager,
-        output,
-        command_object,
-        processes,
-        list_of_threads,
-        thread_clock,
+        commands,
+        listOfProcesses,
+        listOfThreads,
     )
-    thread_scheduler.start()
+    scheduler.start()
 
-    list_of_threads.append(thread_clock)
-    list_of_threads.append(memoryManager)
-    list_of_threads.append(thread_scheduler)
+    listOfThreads.append(memoryManager)
+    listOfThreads.append(scheduler)
 
-    thread_scheduler.process_thread()
+    scheduler.process_thread()
 
-    for thread in list_of_threads:
+    for thread in listOfThreads:
         thread.set_finished(True)
         thread.join()
 
-    logger.debug(f"Memory: {memory_object.memory}")
+    myClock.join()
+
+    logger.debug(f"Memory: {memoryObject.memory}")
 
 
 if __name__ == "__main__":
