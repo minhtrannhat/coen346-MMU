@@ -9,5 +9,4 @@ class Commands:
     def next_cmd(self):
         logger = logging.getLogger(__name__)
         self.index = (self.index + 1) % len(self.list)
-        logger.debug(f"Commands list: {self.list}")
         logger.debug(f"Current index in command list: {self.index}")

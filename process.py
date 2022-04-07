@@ -22,7 +22,7 @@ class Process(Thread):
         self.process_number = process_numbers
         # initialising classes object
         self.thread_manager = manager_obj
-        self.theard_command = command_obj
+        self.threadCommand = command_obj
 
         # initialising time caracteristics
         self.starting_time = S_Time
@@ -33,8 +33,8 @@ class Process(Thread):
         self.lock = Lock()
         self.active_processes = current_processes
 
-    def set_finished(self, bool1):
-        self.process_status = bool1
+    def setFinished(self, isFinished):
+        self.process_status = isFinished
 
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
@@ -58,7 +58,6 @@ class Process(Thread):
         logger.debug(f"Exit Process {self.process_number} Thread")
 
     def execute(self):
-        # controlling accesses to shared ressources , it will prevent against corruption of data
         with self.lock:
             wait_time = (
                 min(
@@ -72,14 +71,11 @@ class Process(Thread):
                 sleep(wait_time)
 
                 if self.end_time - myClock.time > 300:
-                    command = self.theard_command.list[
-                        self.theard_command.index
-                    ]
-                    self.theard_command.next_cmd()
+                    command = self.threadCommand.list[self.threadCommand.index]
+                    self.threadCommand.next_cmd()
                     self.thread_manager.api(
                         command,
                         self.process_number,
-                        self.end_time,
                     )
 
             else:

@@ -1,7 +1,10 @@
+from DiskSpace import Diskspace
+from MainMemory import MainMemory
 from Scheduler import Scheduler
 from MemoryManager import MemoryManager
-from Parser import extract_data, object_creations
+from Parser import extract_data
 from Clock import myClock
+from Commands import Commands
 import logging
 
 
@@ -11,7 +14,7 @@ def main():
         filename="output.txt",
         filemode="w",
         force=True,
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="{message}",
         style="{",
     )
@@ -22,22 +25,23 @@ def main():
 
     (
         listOfProcesses,
-        numberOfPages,
+        maximumNumberOfPages,
         numberOfCores,
         listOfCommands,
+        K_VALUE,
+        timeOut,
     ) = extract_data()
 
-    (
-        commands,
-        diskObject,
-        memoryObject,
-    ) = object_creations(listOfCommands, numberOfPages)
+    commands = Commands(listOfCommands)
+    mainMemory = MainMemory(maximumNumberOfPages, K_VALUE, timeOut)
+    diskSpace = Diskspace()
+
+    memoryManager = MemoryManager(commands, diskSpace, mainMemory)
 
     # start the clock
     myClock.start()
 
     # start the MMU
-    memoryManager = MemoryManager(commands, diskObject, memoryObject)
     memoryManager.start()
 
     # initialise and start the Scheduler
@@ -56,12 +60,12 @@ def main():
     scheduler.process_thread()
 
     for thread in listOfThreads:
-        thread.set_finished(True)
+        thread.setFinished(True)
         thread.join()
 
     myClock.join()
 
-    logger.debug(f"Memory: {memoryObject.memory}")
+    logger.debug(f"Memory: {memoryManager.mainMemory}")
 
 
 if __name__ == "__main__":

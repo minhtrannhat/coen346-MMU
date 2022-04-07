@@ -1,46 +1,62 @@
-# the page class represent the VM.TXT file.
-# Basically, this text needed to be considered as an array,
-# when there was no more space in the virtual memory used
-# in the assignment(which was 2 ),
-#  we needed to write to the vm.txt This class allowed us
-#  to handle this .txt with different functions
+from Parser import K_VALUE
 
 
 class Page:
-    def __init__(self):
-        pass
+    def __init__(
+        self, ID: int, value: int, timeOfAccess: int, K_VALUE: int
+    ) -> None:
+        self._ID: int = ID
+        self._value: int = value
 
-    # we needed a function that was able to write to the page object
-    # This Write function , will take as an argument the page we want to write into the vm as a form of an array [Id,Value]
-    # To write, we input the txt file, we loop through each line and we add to the page if the variable dosnt already exist
-    def Write(self, pageArray):
-        with open("vm.txt", mode="r") as f:
-            input_line = f.readlines()
-            for i, lines in enumerate(input_line):
-                if lines[0] == pageArray[0]:
-                    self.change(input_line, pageArray, i)
-                    return
-            self.add(pageArray)
+        # TODO make another class for only _LAST and _HIST
+        self._LAST: int = timeOfAccess
 
-    # this function is called by the write function when the id is already found in the vm at a certain index
-    # it takes input line which is the input that comes from the read of the write. Since we know at what index it was found, we look at the list at that index and we modify it
+        # HIST is an array of size K_VALUE
+        self._HIST: list[int] = [timeOfAccess] + [0] * (K_VALUE - 1)
 
-    def change(self, input_line, pageArray, index):
-        input_line[index] = str(pageArray[0]) + " " + str(pageArray[1] + "\n")
-        with open("vm.txt", mode="w") as rep:
-            rep.writelines(input_line)
+    # getters
+    @property
+    def ID(self):
+        return self._ID
 
-    # this read function, reads the vm, loop through each line and if the id is found we return at which line that id was found
+    @property
+    def value(self):
+        return self._value
 
-    def read(self, Id):
-        with open("vm.txt", mode="r") as vm:
-            input_line2 = vm.readlines()
-            for line in input_line2:
-                if str(Id) == line[0]:
-                    return line
-        return -1
+    @property
+    def LAST(self):
+        return self._LAST
 
-    # this add function is used to add a new line to the vm, we dont need to loop as we already looped in the write function.
-    def add(self, pageArray):
-        with open("vm.txt", mode="a") as vm1:
-            vm1.write(str(pageArray[0]) + " " + str(pageArray[1]) + "\n")
+    @property
+    def HIST(self):
+        return self._HIST
+
+    @ID.setter
+    def ID(self, ID):
+        self._ID = ID
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+    @LAST.setter
+    def LAST(self, timeStamp):
+        self._LAST = timeStamp
+
+    def __lt__(self, other):
+        return self._HIST[K_VALUE - 1] < other._HIST[K_VALUE - 1]
+
+    def __cmp__(self, other):
+        if self._HIST[K_VALUE - 1] < other._HIST[K_VALUE - 1]:
+            return -1
+        elif self._HIST[K_VALUE - 1] > other._HIST[K_VALUE - 1]:
+            return 1
+        else:
+            return 0
+
+    def update(self, timeStamp: int):
+        lcp: int = self._LAST - self._HIST[0]
+        for index in self._HIST[1:]:
+            self._HIST[index] = self._HIST[index - 1] + lcp
+        self._LAST = timeStamp
+        self._HIST[0] = timeStamp

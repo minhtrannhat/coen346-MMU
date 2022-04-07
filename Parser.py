@@ -1,9 +1,9 @@
-from Commands import Commands
-from Page import Page
 import logging
-from VirtualMemory import VirtualMemory
 
 logger = logging.getLogger(f"{__name__} thread")
+
+k_value = 0
+timeout = 0
 
 
 def extract_data():
@@ -12,7 +12,6 @@ def extract_data():
     with open("processes.txt", mode="r") as process:
         lines = process.readlines()
         numberOfCores = int(lines[0])
-        numberOfProcesses = int(lines[1])
 
     listOfProcesses = []
     processNumber = 1
@@ -35,11 +34,15 @@ def extract_data():
     # process memonfig.txt
     with open("memconfig.txt", mode="r") as file:
         lines = file.readlines()
-        numberOfPages = int(lines[0])
+        maximumNumberOfPages = int(lines[0])
         K_VALUE = int(lines[1])
+        global k_value
+        k_value = K_VALUE
         timeOut = int(lines[2])
+        global timeout
+        timeout = timeOut
 
-        logger.debug(f"Number of pages is: {numberOfPages}")
+        logger.debug(f"Number of pages is: {maximumNumberOfPages}")
         logger.debug(f"The K value is: {K_VALUE}")
         logger.debug(f"The time out value is {timeOut}")
 
@@ -59,14 +62,13 @@ def extract_data():
 
     return (
         listOfProcesses,
-        numberOfPages,
+        maximumNumberOfPages,
         numberOfCores,
         listOfCommands,
+        K_VALUE,
+        timeOut,
     )
 
 
-def object_creations(listOfCommands, numberOfPages):
-    commandObject = Commands(listOfCommands)
-    diskObject = Page()
-    memoryObject = VirtualMemory(numberOfPages)
-    return commandObject, diskObject, memoryObject
+K_VALUE = k_value
+timeOut = timeout

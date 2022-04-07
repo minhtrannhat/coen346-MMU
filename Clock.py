@@ -9,7 +9,7 @@ class clock(Thread):
         self.isFinished: bool = False
         self.time: int = 0
 
-    def set_finished(self, isFinished: bool):
+    def setFinished(self, isFinished: bool):
         self.isFinished = isFinished
 
     def add_time(self, elapsedTime: int):
