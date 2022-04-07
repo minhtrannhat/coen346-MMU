@@ -5,6 +5,7 @@ from MemoryManager import MemoryManager
 from Parser import extract_data
 from Clock import myClock
 from Commands import Commands
+from os import remove
 import logging
 
 
@@ -65,6 +66,8 @@ def main():
     for thread in listOfThreads:
         thread.setFinished(True)
         thread.join()
+
+    remove("vm.txt")
 
     logger.debug(f"Memory: {memoryManager.mainMemory}")
 
