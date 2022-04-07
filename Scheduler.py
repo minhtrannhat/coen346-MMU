@@ -1,4 +1,4 @@
-from process import Process
+from Process import Process
 from threading import Thread
 from Clock import myClock
 import logging

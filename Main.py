@@ -14,7 +14,9 @@ def main():
         filename="output.txt",
         filemode="w",
         force=True,
-        level=logging.DEBUG,
+        # level=logging.DEBUG,
+        # format="{name} - {message}",
+        level=logging.INFO,
         format="{message}",
         style="{",
     )
@@ -56,14 +58,13 @@ def main():
 
     listOfThreads.append(memoryManager)
     listOfThreads.append(scheduler)
+    listOfThreads.append(myClock)
 
     scheduler.process_thread()
 
     for thread in listOfThreads:
         thread.setFinished(True)
         thread.join()
-
-    myClock.join()
 
     logger.debug(f"Memory: {memoryManager.mainMemory}")
 

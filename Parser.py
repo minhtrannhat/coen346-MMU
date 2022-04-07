@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger(f"{__name__} thread")
+logger = logging.getLogger(f"{__name__}")
 
 k_value = 0
 timeout = 0

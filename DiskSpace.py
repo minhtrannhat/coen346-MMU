@@ -1,7 +1,7 @@
 from Page import Page
 import logging
 
-logger = logging.getLogger(f"{__name__} thread")
+logger = logging.getLogger(f"{__name__}")
 
 
 class Diskspace:
