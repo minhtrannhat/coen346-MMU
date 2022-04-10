@@ -97,21 +97,19 @@ class MemoryManager(Thread):
         tempID, tempValue, newValue = self.diskSpace.change(
             pageChosenToSwap, indexOfPageToSwap
         )
-        
+
         # move the page from diskspace into memory
         if self.diskSpace.read(tempID) != -1:
             self.mainMemory.mainMemory[indexOfPageToSwap] = Page(
                 id, newValue, currentTime, K_VALUE
             )
-        
+
         logger.info(
-            f"Clock: {currentTime}, Memory Manager Swap: Variable {id} with Variable {tempID}"
+            f"Clock: {myClock.time}, Memory Manager Swap: Variable {id} with Variable {tempID}"
         )
 
     def api(self, commands, process_number):
         logger = logging.getLogger(f"{__name__} thread")
-
-        currentTime: int = myClock.time
 
         with self.lock:
             if len(commands) > 2:
@@ -124,7 +122,7 @@ class MemoryManager(Thread):
                     self.status = True
                     self.store(com1, com2)
                     logger.info(
-                        f"Clock: {currentTime}, Process {process_number}: {com}: Variable {id}, Value: {com2}"
+                        f"Clock: {myClock.time}, Process {process_number}: {com}: Variable {id}, Value: {com2}"
                     )
                     self.status = False
             else:
@@ -135,12 +133,11 @@ class MemoryManager(Thread):
                 if com == "Release":
                     self.release(com1)
                     logger.info(
-                        f"Clock: {currentTime}, Process {process_number}: {com}: Variable: {id}"
+                        f"Clock: {myClock.time}, Process {process_number}: {com}: Variable: {id}"
                     )
 
                 elif com == "Lookup":
-                    myClock.add_time(10)
                     self.lookUp(com1)
                     logger.info(
-                        f"Clock: {currentTime}, Process {process_number}: {com}: Variable {id}, Value: {self.mainMemory.getVariable(id)}"
+                        f"Clock: {myClock.time}, Process {process_number}: {com}: Variable {id}, Value: {self.mainMemory.getVariable(id)}"
                     )

@@ -24,14 +24,18 @@ class Diskspace:
     def change(self, page: Page, index):
         with open("vm.txt", mode="r+") as file:
             lines = file.readlines()
-        newValue=int(lines[index].strip()[3])
+        newValue = int(lines[index].strip()[3])
         lines[index] = "(" + str(page.ID) + "," + str(page.value) + ")" + "\n"
         logger.debug(f"Line to be changed in disk space: {lines[index]}")
         with open("vm.txt", mode="w+") as rep:
             rep.writelines(lines)
 
         # return the ID and Value of the page that is no longer in disk space
-        return int(lines[index].strip()[1]), int(lines[index].strip()[3]), newValue
+        return (
+            int(lines[index].strip()[1]),
+            int(lines[index].strip()[3]),
+            newValue,
+        )
 
     def read(self, id: int):
         with open("vm.txt", mode="r+") as vm:
