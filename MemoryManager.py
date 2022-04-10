@@ -89,23 +89,23 @@ class MemoryManager(Thread):
                 f"Min heap of the pages with page._LAST - page._HIST[0] > timeOut is {minHeapOfPages}"
             )
             pageChosenToSwap: Page = minHeapOfPages[0]
-            logger.debug(f"The page chosen to swap is {pageChosenToSwap}")
+            logger.debug(f"The page chosen to swap is {pageChosenToSwap.ID}")
 
         indexOfPageToSwap = self.mainMemory.mainMemory.index(pageChosenToSwap)
 
         # move the page from main memory into disk space
-        tempID, tempValue = self.diskSpace.change(
+        tempID, tempValue, newValue = self.diskSpace.change(
             pageChosenToSwap, indexOfPageToSwap
         )
-
+        
         # move the page from diskspace into memory
         if self.diskSpace.read(tempID) != -1:
             self.mainMemory.mainMemory[indexOfPageToSwap] = Page(
-                tempID, tempValue, currentTime, K_VALUE
+                id, newValue, currentTime, K_VALUE
             )
-
+        
         logger.info(
-            f"Clock: {currentTime}, Memory Manager Swap: Variable {id} with Variable {id}"
+            f"Clock: {currentTime}, Memory Manager Swap: Variable {id} with Variable {tempID}"
         )
 
     def api(self, commands, process_number):
