@@ -1,5 +1,5 @@
 from Process import Process
-from threading import Thread
+from threading import Thread, Semaphore
 from Clock import myClock
 import logging
 
@@ -7,7 +7,7 @@ import logging
 class Scheduler(Thread):
     def __init__(
         self,
-        number_of_core,
+        numberOfCores,
         manager_obj,
         command_obj,
         list_of_processes,
@@ -15,16 +15,13 @@ class Scheduler(Thread):
     ):
         super(Scheduler, self).__init__()
 
-        # intialise characteristic
-        self.number_of_core = number_of_core
+        self.numberOfCores = numberOfCores
         self.active_processes = []
         self.isFinished = False
 
-        # intialise objects
         self.thread_manager = manager_obj
         self.command_obj = command_obj
 
-        # initialise lists
         self.thread_list = list_of_threads
         self.list_processes = list_of_processes
         self.current_process = []
@@ -41,14 +38,14 @@ class Scheduler(Thread):
 
     def process_thread(self):
         while True:
-            if (
-                self.list_processes
-            ):  # list_process is a list of list that holds all the processes, we are going to see the one at the first index
+            if self.list_processes:
                 self.current_process = self.list_processes[0]
                 time_needed_to_start = self.current_process[1]
 
+                semaphore = Semaphore(self.numberOfCores)
+
                 if (
-                    self.number_of_core > len(self.active_processes)
+                    self.numberOfCores > len(self.active_processes)
                     and myClock.time >= time_needed_to_start
                 ):
 
@@ -59,6 +56,7 @@ class Scheduler(Thread):
                         self.current_process[2],
                         myClock.time,
                         self.current_process[0],
+                        semaphore,
                     )
                     new_process.start()
                     self.active_processes.append(new_process)

@@ -6,7 +6,6 @@ import logging
 
 
 class Process(Thread):
-    # Change order later
     def __init__(
         self,
         manager_obj,
@@ -15,22 +14,24 @@ class Process(Thread):
         service_times,
         S_Time,
         process_numbers,
+        semaphore,
     ):
         super(Process, self).__init__()
-        # setting the processes caracteristics
+        # setting the processes characteristics
         self.process_status = False
         self.process_number = process_numbers
-        # initialising classes object
+
+        # initialising classes objects
         self.thread_manager = manager_obj
         self.threadCommand = command_obj
 
-        # initialising time caracteristics
+        # initialising time characteristics
         self.starting_time = S_Time
         self.service_time = service_times
         self.end_time = self.starting_time + self.service_time
 
-        # initialising threading components // lock
-        self.lock = Lock()
+        # initialising threading components
+        self.lock = semaphore
         self.active_processes = current_processes
 
     def setFinished(self, isFinished):

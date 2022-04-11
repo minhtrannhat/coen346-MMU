@@ -12,15 +12,10 @@ class clock(Thread):
     def setFinished(self, isFinished: bool):
         self.isFinished = isFinished
 
-    def add_time(self, elapsedTime: int):
-        self.time += elapsedTime
-        new_elapsed = elapsedTime / 1000
-        sleep(new_elapsed)
-
     def run(self):
         logger = logging.getLogger(f"{__name__} thread")
         while not self.isFinished:
-            sleep(0.2)
+            sleep(0.1)
             self.time = self.time + 50
             logger.debug(f"Current time is {self.time}")
 
