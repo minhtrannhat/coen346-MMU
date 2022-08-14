@@ -15,8 +15,6 @@ def main():
         filename="output.txt",
         filemode="w",
         force=True,
-        # level=logging.DEBUG,
-        # format="{name} - {message}",
         level=logging.INFO,
         format="{message}",
         style="{",
@@ -70,6 +68,8 @@ def main():
     remove("vm.txt")
 
     logger.debug(f"Memory: {memoryManager.mainMemory}")
+
+    print("Simulation Complete")
 
 
 if __name__ == "__main__":
